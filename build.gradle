@@ -1,0 +1,85 @@
+plugins {
+    id "groovy"
+    id "war"
+    id "idea"
+    id "com.bertramlabs.asset-pipeline" version "4.5.1"
+    id "application"
+    id "eclipse"
+    // Kotlin plugins - compatible with Java 17 and current Grails
+    id "org.jetbrains.kotlin.jvm" version "1.9.23"
+    id "org.jetbrains.kotlin.plugin.spring" version "1.9.23"
+    id "org.jetbrains.kotlin.plugin.allopen" version "1.9.23"
+}
+
+// Not Published to Gradle Plugin Portal
+apply plugin: "org.grails.grails-web"
+//apply plugin: "org.grails.grails-gsp"
+
+group = "org.bdch"
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.grails.org/grails/core/" }
+}
+
+configurations {
+    configureEach {
+    }
+}
+
+dependencies {
+    profile "org.grails.profiles:web"
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    implementation "io.github.virtualdogbert:logback-groovy-config:1.12.4"
+    implementation "org.grails:grails-core"
+    implementation "org.grails:grails-logging"
+    implementation "org.grails:grails-plugin-databinding"
+    implementation "org.grails:grails-plugin-i18n"
+    implementation "org.grails:grails-plugin-interceptors"
+    implementation "org.grails:grails-plugin-rest"
+    implementation "org.grails:grails-plugin-services"
+    implementation "org.grails:grails-plugin-url-mappings"
+    implementation "org.grails:grails-web-boot"
+    implementation "org.grails.plugins:gsp" // Not really needed
+    implementation "org.grails.plugins:hibernate5"
+    implementation "org.grails.plugins:scaffolding"
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-jetty"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+
+    // Kotlin dependencies
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+
+    compileOnly "io.micronaut:micronaut-inject-groovy"
+    console "org.grails:grails-console"
+    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:4.5.1"
+    runtimeOnly "org.apache.tomcat:tomcat-jdbc"
+    runtimeOnly "org.fusesource.jansi:jansi:1.18"
+    runtimeOnly "org.postgresql:postgresql"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
+    testImplementation "org.grails:grails-gorm-testing-support"
+    testImplementation "org.grails:grails-web-testing-support"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.3"
+//    testImplementation "org.testcontainers:junit-jupiter"
+//    testImplementation "org.testcontainers:postgresql"
+//    testImplementation "org.testcontainers:testcontainers"
+}
+
+application {
+    mainClass = "org.bdch.Application"
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+}
+
+assets {
+    minifyJs = true
+    minifyCss = true
+    skipNonDigests = true
+}

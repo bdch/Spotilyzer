@@ -1,0 +1,8 @@
+applicationType: web
+defaultPackage: org.bdch
+testFramework: junit
+sourceLanguage: groovy
+buildTool: gradle
+gormImpl: gorm-hibernate5
+servletImpl: spring-boot-starter-jetty
+features: [app-name, asset-pipeline-grails, base, github-workflow-java-ci, gorm-hibernate5, gradle, gradle-build-src, grails-application, grails-console, grails-dependencies, grails-gorm-testing-support, grails-gradle-plugin, grails-gsp, grails-profiles, grails-url-mappings, grails-web, grails-web-testing-support, grails-wrapper, junit, logbackGroovy, micronaut-inject-groovy, postgres, readme, scaffolding, spring-boot-autoconfigure, spring-boot-devtools, spring-boot-starter, spring-boot-starter-jetty, spring-resources, testcontainers, yaml]
