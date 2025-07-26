@@ -4,6 +4,13 @@ info:
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
 grails:
+  resources:
+    pattern: '/**'
+  web:
+    static-path-pattern: '/static/'
+    static-locations:
+    - 'classpath:/static/'
+    - 'classpath:/public/'
   codegen:
     defaultPackage: org.bdch
   profile: web
@@ -40,16 +47,13 @@ grails:
       - text/xml
       - application/xml
   views:
-    gsp: #  gsp we dont need this, this comes defaujlt with grails
-      encoding: UTF-8
-      htmlcodec: xml
-      codecs:
-        expression: html
-        scriptlet: html
-        taglib: none
-        staticparts: none
+    gsp:
+      enabled: false
     default:
       codec: html
+  urlmapping:
+    cache:
+      maxsize: 1000
 dataSource:
   pooled: true
   driverClassName: org.postgresql.Driver
@@ -94,3 +98,15 @@ hibernate:
     queries: false
     use_second_level_cache: false
     use_query_cache: false
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
+      - org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration
+      - org.springframework.boot.autoconfigure.dao.PersistenceExceptionTranslationAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
+  web:
+    resources:
+      static-locations:
+        - 'classpath:/public/'
+        - 'classpath:/static/'
