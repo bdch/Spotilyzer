@@ -1,5 +1,5 @@
 name: Java CI
-on: [push, pull_request]
+on: [] #push, pull_request if you wanna turn this on go ahead. We dont need this for now
 jobs:
   build:
     runs-on: ubuntu-latest

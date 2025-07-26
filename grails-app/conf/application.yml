@@ -40,7 +40,7 @@ grails:
       - text/xml
       - application/xml
   views:
-    gsp:
+    gsp: #  gsp we dont need this, this comes defaujlt with grails
       encoding: UTF-8
       htmlcodec: xml
       codecs:
@@ -51,24 +51,26 @@ grails:
     default:
       codec: html
 dataSource:
-  driverClassName: org.postgresql.Driver
-  username: postgres
-  password: ''
   pooled: true
+  driverClassName: org.postgresql.Driver
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+  username: iu
+  password: 'iu'
+  url: jdbc:postgresql://192.168.2.112:5432/iu
   jmxExport: true
 environments:
   development:
     dataSource:
       dbCreate: create-drop
-      url: jdbc:postgresql://localhost:5432/devDb
+      url: jdbc:postgresql://192.168.2.112:5432/iu
   test:
     dataSource:
       dbCreate: update
-      url: jdbc:postgresql://localhost:5432/testDb
+      url: jdbc:postgresql://192.168.2.112:5432/iu
   production:
     dataSource:
       dbCreate: none
-      url: jdbc:postgresql://localhost:5432/postgres
+      url: jdbc:postgresql://192.168.2.112:5432/iu
       properties:
         jmxEnabled: true
         initialSize: 5
