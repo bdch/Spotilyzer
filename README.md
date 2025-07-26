@@ -1,6 +1,8 @@
 # Spotilyzer
 
-
+This is initially a student project. This may be further developed in the future.
+The code will be mainly in Grails, Vanilla JavaScript, and HTML/CSS. For future
+interests, this can be refactored into react or vue.js.
 
 
 ## Grails 6.2.3 Documentation
