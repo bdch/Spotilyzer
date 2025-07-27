@@ -1,17 +1,21 @@
-async function login() {
-
+async function register() {
     document.querySelector('form').addEventListener('submit', function (event) {
-        event.preventDefault()
 
         const username = document.getElementById('usernameInputField').value;
         const password = document.getElementById('passwordInputField').value;
+        const confirmPassword = document.getElementById('confirmPasswordInputField').value;
+
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            event.preventDefault();
+
+        }
 
         const payload = {
             username: username,
             password: password
         };
-
-        fetch('/loginPage',
+        fetch('/registerPage',
             {
                 method: ' POST',
                 headers: {
@@ -23,7 +27,7 @@ async function login() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    //  TODO Redirect to the main page
+                    //  TODO Redirect to the login page
                     alert('Login successful!');
                 } else {
                     alert('Error at login:' + data.message);
@@ -33,5 +37,6 @@ async function login() {
                 console.error('Error:', error);
                 alert('An error occurred during login.');
             });
+
     })
 }

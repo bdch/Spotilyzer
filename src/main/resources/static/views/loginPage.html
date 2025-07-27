@@ -5,17 +5,20 @@
     <div class="content">
         <form>
             <div>
-                <label>Login</label>
-                <input type="text" placeHolder="Username" required/>
-
+                <h1>Login</h1>
+                <label>Username</label>
+                <input id="usernameInputField" type="text" placeHolder="Username" required/>
                 <label>Password</label>
-                <input type="text" placeHolder="Password" required/>
+                <input id="passwordInputField" type="text" placeHolder="Password" required/>
 
-                <button type="submit">Login</button>
+                <button onclick="login()" type="submit">Login</button>
             </div>
             <div>
                 <button type="button">Cancel</button>
                 <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+            <div>
+                <span class="psw">Don't have an account? <a href="/register">Register</a></span>
             </div>
         </form>
     </div>
