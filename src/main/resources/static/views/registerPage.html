@@ -3,20 +3,22 @@
 
 <div class="page-wrapper">
   <div class="content">
-    <form>
+    <form id="registerForm">
       <div>
-        <h1>Login</h1>
+        <h1>Registration</h1>
         <label>Username</label>
         <input id="usernameInputField" type="text" placeHolder="Username" required/>
 
         <label>Password</label>
-        <input id="passwordInputField" type="text" placeHolder="Password" required/>
+        <input id="passwordInputField" type="password" placeHolder="Password" required/>
 
         <label>Password confirmation</label>
-        <input id="confirmPasswordInputField" type="text" placeHolder="repeat password" required/>
+        <input id="confirmPasswordInputField" type="password" placeHolder="repeat password" required/>
 
-        <button onclick="register()" type="submit">Login</button>
+        <button type="submit">Login</button>
       </div>
     </form>
   </div>
 </div>
+
+<script src ="/js/register.js"></script>

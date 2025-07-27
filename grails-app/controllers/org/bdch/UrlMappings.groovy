@@ -4,8 +4,9 @@ class UrlMappings {
     static mappings = {
 
         // Login Page
-        "/"(controller: "login", action: "renderLoginPage")
-        "/register"(controller: "auth", action: "register")
+        "/"(controller: "login", action: "renderLoginPage") // TODO This kinda sucks since we set the default to '/' instead of a specific controller/action
+        "/registerPage"(controller: "auth", action: "renderRegisterPage")
+        "/auth/register"(controller: "auth", action: "register")
 
         "/$controller/$action?/$id?(.$format)?"{
             constraints {
