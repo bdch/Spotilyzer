@@ -7,7 +7,7 @@ class UrlMappings {
       "/"(controller: "login", action: "renderLoginPage") // TODO This kinda sucks since we set the default to '/' instead of a specific controller/action
       "/registerPage"(controller: "auth", action: "renderRegisterPage")
       "/auth/register"(controller: "auth", action: "register")
-      "/login/loginPage"(controller: "login", action: "login", method: "POST")
+      "/loginPage"(controller: "login", action: "login", method: "POST")
 
       // Home Page
       "/home"(controller: "homeDelegate", action: "renderHomePage")

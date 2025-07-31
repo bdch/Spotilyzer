@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const payload = { username, password };
 
         try {
-            const response = await fetch('/login/loginPage', {
+            const response = await fetch('/loginPage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.status === 'success') {
+                localStorage.setItem('sessionKey', data.sessionKey);
                 window.location.href = "/home";
             } else {
                 alert("Login failed: " + data.message);
