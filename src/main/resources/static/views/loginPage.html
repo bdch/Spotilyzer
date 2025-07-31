@@ -3,13 +3,13 @@
 
 <div class="page-wrapper">
     <div class="content">
-        <form>
+        <form id="loginForm">
             <div>
-                <label>Login</label>
-                <input type="text" placeHolder="Username" required/>
-
+                <h1>Login</h1>
+                <label>Username</label>
+                <input id="usernameInputField" type="text" placeHolder="Username" required/>
                 <label>Password</label>
-                <input type="text" placeHolder="Password" required/>
+                <input id="passwordInputField" type="password" placeHolder="Password" required/>
 
                 <button type="submit">Login</button>
             </div>
@@ -17,6 +17,11 @@
                 <button type="button">Cancel</button>
                 <span class="psw">Forgot <a href="#">password?</a></span>
             </div>
+            <div>
+                <span class="psw">Don't have an account? <a href="/registerPage">Register</a></span>
+            </div>
         </form>
     </div>
 </div>
+
+<script src="/js/login.js"></script>

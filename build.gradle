@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id "groovy"
     id "war"
@@ -18,6 +20,10 @@ group = "org.bdch"
 repositories {
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core/" }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 configurations {
@@ -47,6 +53,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-jetty"
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation 'org.springframework.security:spring-security-crypto'
 
     // Kotlin dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -67,7 +74,7 @@ application {
     mainClass = "org.bdch.Application"
 }
 
-java {
-    sourceCompatibility = JavaVersion.toVersion("17")
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions.jvmTarget = "17"
 }
 
