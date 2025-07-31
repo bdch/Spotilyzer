@@ -115,3 +115,7 @@ spring:
             static-locations:
                 - 'classpath:/public/'
                 - 'classpath:/static/'
+logging:
+    level:
+        org.grails.web.mapping: DEBUG
+        org.springframework.web.servlet: DEBUG
