@@ -14,22 +14,19 @@ class AuthService {
     Logger logger = LoggerFactory.getLogger(AuthService.class)
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder()
 
-
+    @Transactional
     Map<String, Object> registerUser(String username, String password) {
         if (username.isEmpty() || password.isEmpty()) {
             logger.error("Username is empty or password is empty!")
             return [status: "error", message: "Username and password are required"]
         }
-
         if (User.findByUsername(username) != null) {
             logger.error("User already exists with username: $username")
             return [status: "error", message: "Username already exists with username: $username"]
         }
         logger.info("Trying to register user with username: $username")
-
         User user = new User(username: username, passwordHash: passwordEncoder.encode(password))
         logger.info("User created with username: $user.username")
-
         if (!user.save(flush: true)) {
             logger.error("Failed to register user: ${user.errors}")
             return [status: "error", message: "Failed to register user: ${user.errors}"]
@@ -38,6 +35,7 @@ class AuthService {
         return [status: "success", message: "User '${user.username}' registered successfully"]
     }
 
+    @Transactional
     Map<String, Object> login(String username, String password) {
         if (username.isEmpty() || password.isEmpty()) {
             logger.warn("Login attempt with empty username or password")
@@ -56,16 +54,12 @@ class AuthService {
             return [status: "error", message: "Invalid username or password"]
         }
 
+//        deleteSession(user)
+
         // Session
-        String sessionKey = UUID.randomUUID().toString()
-
-//      Session.where {
-//         owner == user
-//      }.deleteAll()
-
         Session session = new Session(
                 user_id: user.id,
-                sessionKey: sessionKey,
+                sessionKey: UUID.randomUUID().toString(),
                 owner: user,
                 cts: System.currentTimeSeconds(),
                 creation_timestamp: System.currentTimeMillis()
@@ -76,8 +70,15 @@ class AuthService {
             logger.error("Session couln'd be saved due to: ${session.errors}")
         }
 
-        logger.info("User '${user.username}' logged in successfully  with sessionKey '${sessionKey}'")
-        return [status: "success", message: "Login successful", user: user, sessionKey: sessionKey]
+        logger.info("User '${user.username}' logged in successfully")
+        return [status: "success", message: "Login successful", user: user]
+    }
+
+    static def deleteSession(User user) {
+        Session existingSession = Session.findByOwner(user)
+        if (existingSession) {
+            existingSession.delete(flush: true)
+        }
     }
 
 

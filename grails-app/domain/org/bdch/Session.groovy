@@ -1,5 +1,6 @@
 package org.bdch
 
+
 class Session {
 
     Long id
