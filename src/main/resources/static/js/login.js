@@ -1,37 +1,32 @@
-async function login() {
-
-    document.querySelector('form').addEventListener('submit', function (event) {
-        event.preventDefault()
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async function (event) {
+        event.preventDefault();
 
         const username = document.getElementById('usernameInputField').value;
         const password = document.getElementById('passwordInputField').value;
+        const payload = { username, password };
 
-        const payload = {
-            username: username,
-            password: password
-        };
-
-        fetch('/loginPage',
-            {
-                method: ' POST',
+        try {
+            const response = await fetch('/login/loginPage', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    //  TODO Redirect to the main page
-                    alert('Login successful!');
-                } else {
-                    alert('Error at login:' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred during login.');
             });
-    })
-}
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                window.location.href = "/home";
+            } else {
+                alert("Login failed: " + data.message);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred during login.");
+        }
+    });
+});

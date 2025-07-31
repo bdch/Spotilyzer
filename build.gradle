@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id "groovy"
     id "war"
@@ -18,6 +20,10 @@ group = "org.bdch"
 repositories {
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core/" }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 configurations {
@@ -67,7 +73,7 @@ application {
     mainClass = "org.bdch.Application"
 }
 
-java {
-    sourceCompatibility = JavaVersion.toVersion("17")
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions.jvmTarget = "17"
 }
 
