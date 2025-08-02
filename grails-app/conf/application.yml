@@ -68,17 +68,25 @@ environments:
             dbCreate: update
             driverClassName: org.postgresql.Driver
             dialect: org.hibernate.dialect.PostgreSQLDialect
-            url: jdbc:postgresql://192.168.2.112:5432/iu
+            url: jdbc:postgresql://localhost:15432/iu
+            username: iu
+            password: 'iu'
+    laptop:
+        dataSource:
+            dbCreate: update
+            driverClassName: org.postgresql.Driver
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            url: jdbc:postgresql://localhost:15432/iu
             username: iu
             password: 'iu'
     test:
         dataSource:
             dbCreate: update
-            url: jdbc:postgresql://192.168.2.112:5432/iu
+            url: jdbc:postgresql://localhost:15432/iu
     production:
         dataSource:
             dbCreate: none
-            url: jdbc:postgresql://192.168.2.112:5432/iu
+            url: jdbc:postgresql://localhost:15432/iu
             properties:
                 jmxEnabled: true
                 initialSize: 5
@@ -119,3 +127,4 @@ spring:
 #    level:
 #        org.grails.web.mapping: DEBUG
 #        org.springframework.web.servlet: DEBUG
+#        org.hibernate.SQL: DEBUG

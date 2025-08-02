@@ -12,6 +12,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen" version "1.9.23"
 }
 
+
 // Grails web support
 apply plugin: "org.grails.grails-web"
 
@@ -71,10 +72,17 @@ dependencies {
 }
 
 application {
-    mainClass = "org.bdch.Application"
+    mainClass = "org.bdch.groovy.Application"
 }
 
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions.jvmTarget = "17"
 }
+
+// This wont work, since we need to type a password to connect to the database
+//tasks.register('startTunnel', Exec) {
+//    commandLine './start-db-tunnel.sh'
+//}
+//
+//bootRun.dependsOn(startTunnel)
 
