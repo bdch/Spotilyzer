@@ -5,6 +5,25 @@ The code will be mainly in Grails, Vanilla JavaScript, and HTML/CSS. For future
 interests, this can be refactored into react or vue.js.
 
 
+## Development
+
+### Running the application
+
+To run the application, make sure you are on the right profile and port:
+- For port tunneling, run and put in the password. If you need help, contact me.
+```shell
+  ssh -N -L 15432:localhost:5432 bdch@bdch -p 11111
+```
+
+- If you are on a Windows development machine, run
+```
+./gradlew bootRun "-Dgrails.env=development"
+```
+This sets the profile to development and will allow you to run the app
+with the correct port.
+
+
+
 ## Grails 6.2.3 Documentation
 
 - [User Guide](https://docs.grails.org/6.2.3/guide/index.html)

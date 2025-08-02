@@ -12,7 +12,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen" version "1.9.23"
 }
 
-mainClassName = 'org.bdch.Application'
 
 // Grails web support
 apply plugin: "org.grails.grails-web"
@@ -73,7 +72,7 @@ dependencies {
 }
 
 application {
-    mainClass = "org.bdch.Application"
+    mainClass = "org.bdch.groovy.Application"
 }
 
 tasks.withType(KotlinCompile).configureEach {

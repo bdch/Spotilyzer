@@ -74,7 +74,9 @@ environments:
     laptop:
         dataSource:
             dbCreate: update
-            url: jdbc:postgresql://localhost:5432/iu
+            driverClassName: org.postgresql.Driver
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            url: jdbc:postgresql://localhost:15432/iu
             username: iu
             password: 'iu'
     test:
@@ -125,3 +127,4 @@ spring:
 #    level:
 #        org.grails.web.mapping: DEBUG
 #        org.springframework.web.servlet: DEBUG
+#        org.hibernate.SQL: DEBUG
