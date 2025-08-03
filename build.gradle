@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy
 
 buildscript {
     repositories {
@@ -87,6 +88,8 @@ application {
 
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions.jvmTarget = "17"
+    compilerExecutionStrategy = KotlinCompilerExecutionStrategy.IN_PROCESS
+    useDaemonFallbackStrategy.set(false)
 }
 
 // This wont work, since we need to type a password to connect to the database
