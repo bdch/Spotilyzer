@@ -1,7 +1,6 @@
 package org.bdch
 
 import grails.gorm.annotation.Entity
-import groovy.transform.CompileStatic
 
 @Entity
 class User {

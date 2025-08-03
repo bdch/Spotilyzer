@@ -15,10 +15,10 @@ class AuthInterceptor {
    }
 
    boolean before() {
-      String sessionKey = request.getHeader("X-Session-Key")
+      String sessionKey = request.getHeader("X-org.bdch.Session-Key")
       if (!sessionKey) {
          response.status = 401 // Unauthorized
-         render([status: "error", message: "Session key is required"] as JSON)
+         render([status: "error", message: "org.bdch.Session key is required"] as JSON)
          return false
       }
       User user = authService.findUserBySessionKey(sessionKey)

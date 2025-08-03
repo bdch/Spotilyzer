@@ -1,6 +1,6 @@
-package org.bdch
 
-import org.bdch.util.AbstractController
+
+import util.AbstractController
 
 class HomeDelegateController extends AbstractController {
 

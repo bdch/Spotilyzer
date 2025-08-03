@@ -17,7 +17,7 @@ class SessionCleanupJob {
    def execute() {
       try {
          scheduledJobService.cleanExpiredSessions()
-         logger.info("Session cleanup job executed successfully at ${Instant.now()}.")
+         logger.info("org.bdch.Session cleanup job executed successfully at ${Instant.now()}.")
       } catch (Exception e) {
          logger.error("Error during session cleanup job execution: ${e.message}", e)
       }
