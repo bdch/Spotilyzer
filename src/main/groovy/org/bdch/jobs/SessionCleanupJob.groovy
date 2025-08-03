@@ -18,12 +18,7 @@ class SessionCleanupJob {
    @Autowired
    ScheduledJobService scheduledJobService
 
-   @PostConstruct
-   void init() {
-      logger.info("SessionCleanupJob bean created and initialized!")
-   }
-
-   @Scheduled(fixedRate = 60000L)
+   @Scheduled(fixedRate = 3600000L) // Every hour
    def execute() {
       try {
          scheduledJobService.cleanExpiredSessions()
