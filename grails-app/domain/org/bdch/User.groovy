@@ -6,12 +6,12 @@ import groovy.transform.CompileStatic
 @Entity
 class User {
 
-   static hasOne = [Session]
-
    Long id
    Long version // No idea what this field is, lets map it I guess ...
    String username
    String passwordHash
+
+   static hasOne = [Session]
 
    static mapping = {
       table 'user_account'

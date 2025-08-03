@@ -1,5 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+    repositories {
+        maven {
+            url "https://repo.grails.org/grails/core/"
+        }
+    }
+    dependencies {
+    }
+}
+
+
 plugins {
     id "groovy"
     id "war"
@@ -11,7 +22,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.spring" version "1.9.23"
     id "org.jetbrains.kotlin.plugin.allopen" version "1.9.23"
 }
-
 
 // Grails web support
 apply plugin: "org.grails.grails-web"

@@ -1,0 +1,25 @@
+import org.bdch.services.ScheduledJobService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Component
+
+import java.time.Instant
+
+@Component
+class SessionCleanupJob {
+
+   Logger logger = LoggerFactory.getLogger(SessionCleanupJob.class)
+
+   ScheduledJobService scheduledJobService
+
+   @Scheduled(fixedRate = 60000L)
+   def execute() {
+      try {
+         scheduledJobService.cleanExpiredSessions()
+         logger.info("Session cleanup job executed successfully at ${Instant.now()}.")
+      } catch (Exception e) {
+         logger.error("Error during session cleanup job execution: ${e.message}", e)
+      }
+   }
+}
