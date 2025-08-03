@@ -1,4 +1,4 @@
-package org.bdch
+
 
 class UrlMappings {
    static mappings = {

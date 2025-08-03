@@ -1,7 +1,6 @@
-package org.bdch.util
+package util
 
 import grails.artefact.Controller
-import org.apache.logging.slf4j.SLF4JLogger
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource

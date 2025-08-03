@@ -1,8 +1,8 @@
-package org.bdch
+
 
 import grails.converters.JSON
 import org.bdch.services.AuthService
-import org.bdch.util.AbstractController
+import util.AbstractController
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.transaction.annotation.Transactional
@@ -31,6 +31,4 @@ class AuthController extends AbstractController {
    def renderRegisterPage() {
       renderViewFromStatic("registerPage")
    }
-
-
 }

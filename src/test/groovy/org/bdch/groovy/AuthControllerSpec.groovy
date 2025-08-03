@@ -1,7 +1,7 @@
 package org.bdch.groovy
 
 import grails.testing.web.controllers.ControllerUnitTest
-import org.bdch.AuthController
+import AuthController
 import spock.lang.Specification
 
 class AuthControllerSpec extends Specification implements ControllerUnitTest<AuthController> {
