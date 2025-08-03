@@ -21,17 +21,17 @@ class AuthService {
          return [status: "error", message: "Username and password are required"]
       }
       if (User.findByUsername(username) != null) {
-         logger.error("org.bdch.User already exists with username: $username")
+         logger.error("User already exists with username: $username")
          return [status: "error", message: "Username already exists with username: $username"]
       }
       logger.info("Trying to register user with username: $username")
       User user = new User(username: username, passwordHash: passwordEncoder.encode(password))
-      logger.info("org.bdch.User created with username: $user.username")
+      logger.info("User created with username: $user.username")
       if (!user.save(flush: true)) {
          logger.error("Failed to register user: ${user.errors}")
          return [status: "error", message: "Failed to register user: ${user.errors}"]
       }
-      logger.info("org.bdch.User '${user.username}' registered successfully")
+      logger.info("User '${user.username}' registered successfully")
       return [status: "success", message: "org.bdch.User '${user.username}' registered successfully"]
    }
 

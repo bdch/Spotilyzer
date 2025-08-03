@@ -4,13 +4,13 @@ import grails.gorm.transactions.Transactional
 import org.bdch.Session
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
-
+@Service
 @Transactional
 class ScheduledJobService {
 
    Logger logger = LoggerFactory.getLogger(ScheduledJobService.class)
-
 
    void cleanExpiredSessions() {
       long now = System.currentTimeMillis()
