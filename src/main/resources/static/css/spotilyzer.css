@@ -84,7 +84,7 @@ button {
     cursor: pointer;
 }
 
-span {
+.btnSpan {
     margin-top: 1.5rem;
     width: 100%;
     padding: 10px 20px;
