@@ -22,6 +22,7 @@ a {
     color: var(--accent);
     text-decoration: none;
 }
+
 a:hover {
     text-decoration: underline;
 }
@@ -195,7 +196,7 @@ button:hover {
     width: auto;
 }
 
-form  {
+.form-mini {
     padding: 2rem;
     background: #1C1C1A;
     border-radius: 8px;
