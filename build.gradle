@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy
 
 buildscript {
     repositories {
@@ -18,9 +19,9 @@ plugins {
     id "application"
     id "eclipse"
     // Kotlin plugins - compatible with Java 17 and current Grails
-    id "org.jetbrains.kotlin.jvm" version "1.9.23"
-    id "org.jetbrains.kotlin.plugin.spring" version "1.9.23"
-    id "org.jetbrains.kotlin.plugin.allopen" version "1.9.23"
+    id "org.jetbrains.kotlin.jvm" version "1.7.22"
+    id "org.jetbrains.kotlin.plugin.spring" version "1.7.22"
+    id "org.jetbrains.kotlin.plugin.allopen" version "1.7.22"
 }
 
 // Grails web support
@@ -39,6 +40,31 @@ kotlin {
 
 configurations {
     configureEach {
+    }
+}
+
+// Configure source sets explicitly
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/main/groovy', 'grails-app/controllers', 'grails-app/services',
+                       'grails-app/domain', 'grails-app/init', 'grails-app/utils']
+        }
+        kotlin {
+            srcDirs = ['src/main/kotlin']
+        }
+    }
+}
+
+configurations {
+    configureEach {
+        // Force consistent Kotlin versions
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.jetbrains.kotlin') {
+                details.useVersion '1.7.22'
+                details.because 'Force consistent Kotlin version'
+            }
+        }
     }
 }
 
@@ -67,8 +93,8 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto'
 
     // Kotlin dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "org.jetbrains.kotlin:kotlin-reflect"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.22"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.22"
 
     compileOnly "io.micronaut:micronaut-inject-groovy"
     console "org.grails:grails-console"
@@ -87,6 +113,16 @@ application {
 
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions.jvmTarget = "17"
+    compilerExecutionStrategy = KotlinCompilerExecutionStrategy.DAEMON
+//    useDaemonFallbackStrategy.set(false)
+    kotlinOptions.freeCompilerArgs = ["-Xjsr305=strict"]
+}
+
+allOpen {
+    annotation("grails.compiler.GrailsCompileStatic")
+    annotation("org.springframework.stereotype.Component")
+    annotation("org.springframework.stereotype.Service")
+    annotation("org.springframework.transaction.annotation.Transactional")
 }
 
 // This wont work, since we need to type a password to connect to the database

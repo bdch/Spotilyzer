@@ -94,3 +94,4 @@ logger('org.grails.plugins', ERROR, ['STDOUT','ROLLING_FILE'], false) // plugins
 logger('org.grails.orm.hibernate', ERROR, ['STDOUT','ROLLING_FILE'], false) // hibernate
 logger('org.springframework', ERROR, ['STDOUT','ROLLING_FILE'], false)
 logger('org.hibernate', ERROR, ['STDOUT','ROLLING_FILE'], false)
+logger('services', DEBUG, ['STDOUT','ROLLING_FILE'], false) // services
