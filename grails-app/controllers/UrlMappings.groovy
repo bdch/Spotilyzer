@@ -14,6 +14,10 @@ class UrlMappings {
         // User Profile
         "/userProfilePage"(controller: "userProfile", action: "renderUserProfilePage")
 
+        // Auth for Spotify
+        "/auth/callback"(controller: "auth", action: "callbackHandling")
+        "/auth/spotify"(controller: "auth", action: "spotifyLogin")
+
 
         "/$controller/$action?/$id?(.$format)?" {
             constraints {
