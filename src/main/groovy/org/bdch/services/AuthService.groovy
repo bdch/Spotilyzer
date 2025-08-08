@@ -15,7 +15,6 @@ class AuthService {
    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder()
    private static final long MAX_SESSION_TIME = 3600000 // 1 hour in milliseconds
 
-   @Transactional
    Map<String, Object> registerUser(String username, String password) {
       if (username.isEmpty() || password.isEmpty()) {
          logger.error("Username is empty or password is empty!")
@@ -36,7 +35,6 @@ class AuthService {
       return [status: "success", message: "org.bdch.User '${user.username}' registered successfully"]
    }
 
-   @Transactional
    Map<String, Object> login(String username, String password) {
       if (username.isEmpty() || password.isEmpty()) {
          logger.warn("Login attempt with empty username or password")
@@ -58,22 +56,22 @@ class AuthService {
       // Initial session validation - yes this is shitty implemented
       Session existingSession = Session.findByUser(user)
 
-      if (existingSession) {
-         long now = System.currentTimeMillis()
-         long sessionAge = now - existingSession.creation_timestamp
-
-         if (sessionAge > MAX_SESSION_TIME) {
-            logger.info("org.bdch.Session expired for user $username, deleting old session")
-            existingSession.delete(flush: true)
-         } else {
-            logger.info("org.bdch.User $username already has a valid session")
-            return [status       : "success", message: "Login successful",
-                    user         : [user_id   : user.id,
-                                    username  : user.username,
-                                    sessionKey: existingSession.sessionKey
-                    ], sessionKey: existingSession.sessionKey]
-         }
-      }
+//      if (existingSession) {
+//         long now = System.currentTimeMillis()
+//         long sessionAge = now - existingSession.creation_timestamp
+//
+//         if (sessionAge > MAX_SESSION_TIME) {
+//            logger.info("org.bdch.Session expired for user $username, deleting old session")
+//            existingSession.delete(flush: true)
+//         } else {
+//            logger.info("org.bdch.User $username already has a valid session")
+//            return [status       : "success", message: "Login successful",
+//                    user         : [user_id   : user.id,
+//                                    username  : user.username,
+//                                    sessionKey: existingSession.sessionKey
+//                    ], sessionKey: existingSession.sessionKey]
+//         }
+//      }
 
       Session session = new Session(
          sessionKey: UUID.randomUUID().toString(),
@@ -95,7 +93,7 @@ class AuthService {
       ]
    }
 
-   def validateSession(String sessionKey) {
+   static def validateSession(String sessionKey) {
       if (!sessionKey) {
          return [valid: false, message: "No session key provided"]
       }
@@ -110,7 +108,7 @@ class AuthService {
          session.delete(flush: true)
          return [valid: false, message: "Session expired"]
       }
-      return [valid: true, user: session.owner]
+      return [valid: true, user: session.user]
    }
 
 

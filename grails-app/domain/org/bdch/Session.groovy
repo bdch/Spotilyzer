@@ -2,8 +2,6 @@ package org.bdch
 
 import grails.gorm.annotation.Entity
 
-
-@Entity
 class Session {
 
    Long id
@@ -16,9 +14,8 @@ class Session {
 
    static mapping = {
       table 'user_session'
-      id generator: 'identity'
       sessionKey column: 'session_key', unique: true
-      user column: 'user_id', fetch: 'join'
+      user column: 'user_id'
       creation_timestamp column: 'creation_timestamp'
    }
 

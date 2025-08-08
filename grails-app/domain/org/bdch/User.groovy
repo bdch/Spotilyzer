@@ -2,7 +2,6 @@ package org.bdch
 
 import grails.gorm.annotation.Entity
 
-@Entity
 class User {
 
    Long id
@@ -10,7 +9,7 @@ class User {
    String username
    String passwordHash
 
-   static hasOne = [session: Session]
+   static hasMany = [session: Session]
 
    static mapping = {
       table 'user_account'

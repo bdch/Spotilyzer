@@ -1,8 +1,10 @@
 import grails.converters.JSON
+import grails.web.Controller
 import org.bdch.User
 import org.bdch.services.UserService
 import util.AbstractController
 
+@Controller
 class UserProfileController extends AbstractController {
 
     UserService userService
