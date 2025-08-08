@@ -195,6 +195,24 @@ button:hover {
     width: auto;
 }
 
+.btn-primary :hover {
+    color: white;
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger :hover {
+    color: #fff;
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
 .form-mini {
     padding: 2rem;
     background: #1C1C1A;

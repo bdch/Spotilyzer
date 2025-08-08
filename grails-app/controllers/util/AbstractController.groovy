@@ -1,6 +1,7 @@
 package util
 
 import grails.artefact.Controller
+import org.bdch.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
@@ -23,5 +24,13 @@ abstract class AbstractController implements Controller {
          logger.info("Error rendering view: $viewName, Exception: $e")
          render(status: 500, text: "$e.message")
       }
+   }
+
+   protected User getCurrentUser() {
+      return request.getAttribute('currentUser') as User
+   }
+
+   protected String getCurrentSessionKey() {
+      return request.getHeader('X-Session-Key') ?: request.getParameter('sessionKey')
    }
 }

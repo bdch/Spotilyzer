@@ -55,8 +55,9 @@ class AuthService {
          return [status: "error", message: "Invalid username or password"]
       }
 
-      // org.bdch.Session Management
-      Session existingSession = Session.findByUser_id(user.id)
+      // Initial session validation - yes this is shitty implemented
+      Session existingSession = Session.findByUser(user)
+
       if (existingSession) {
          long now = System.currentTimeMillis()
          long sessionAge = now - existingSession.creation_timestamp
@@ -66,15 +67,17 @@ class AuthService {
             existingSession.delete(flush: true)
          } else {
             logger.info("org.bdch.User $username already has a valid session")
-            return [status: "success", message: "Login successful", user: user, sessionKey: existingSession.sessionKey]
+            return [status       : "success", message: "Login successful",
+                    user         : [user_id   : user.id,
+                                    username  : user.username,
+                                    sessionKey: existingSession.sessionKey
+                    ], sessionKey: existingSession.sessionKey]
          }
       }
 
       Session session = new Session(
-         user_id: user.id,
          sessionKey: UUID.randomUUID().toString(),
-         owner: user,
-         cts: System.currentTimeSeconds(),
+         user: user,
          creation_timestamp: System.currentTimeMillis()
       )
 
@@ -84,14 +87,48 @@ class AuthService {
       }
 
       logger.info("org.bdch.User '${user.username}' logged in successfully")
-      return [status: "success", message: "Login successful", user: user]
+      return [status : "success",
+              message: "Login successful",
+              user   : [user_id   : user.id,
+                        username  : user.username,
+                        sessionKey: session.sessionKey]
+      ]
    }
 
-   static def deleteSession(User user) {
-      Session existingSession = Session.findByOwner(user)
-      if (existingSession) {
-         existingSession.delete(flush: true)
+   def validateSession(String sessionKey) {
+      if (!sessionKey) {
+         return [valid: false, message: "No session key provided"]
       }
+      Session session = Session.findBySessionKey(sessionKey)
+      if (!session) {
+         return [valid: false, message: "Invalid session key"]
+      }
+      long now = System.currentTimeMillis()
+      long sessionAge = now - session.creation_timestamp
+
+      if (sessionAge > MAX_SESSION_TIME) {
+         session.delete(flush: true)
+         return [valid: false, message: "Session expired"]
+      }
+      return [valid: true, user: session.owner]
+   }
+
+
+   def deleteSession(String username) {
+      def userToDelete = User.findByUsername(username)
+      if (!userToDelete) {
+         logger.warn("User not found for deletion: ${username}")
+         return false
+      }
+
+      int deletedSessions = Session.executeUpdate(
+         "delete from Session s where s.user = :user",
+         [user: userToDelete]
+      )
+      logger.info("Deleted ${deletedSessions} sessions for user ${username}")
+      userToDelete.delete(flush: true, failOnError: true)
+      logger.info("User ${username} deleted successfully")
+      return true
    }
 
 

@@ -10,7 +10,7 @@ class User {
    String username
    String passwordHash
 
-   static hasOne = [Session]
+   static hasOne = [session: Session]
 
    static mapping = {
       table 'user_account'
