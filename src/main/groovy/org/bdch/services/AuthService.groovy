@@ -1,12 +1,14 @@
 package org.bdch.services
 
+import grails.gorm.transactions.Transactional
 import org.bdch.Session
+import org.bdch.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.stereotype.Service
-import grails.gorm.transactions.Transactional
-import org.bdch.User
+
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletResponse
 
 @Transactional
 class AuthService {
@@ -35,7 +37,7 @@ class AuthService {
       return [status: "success", message: "org.bdch.User '${user.username}' registered successfully"]
    }
 
-   Map<String, Object> login(String username, String password) {
+   Map<String, Object> login(String username, String password, HttpServletResponse response) {
       if (username.isEmpty() || password.isEmpty()) {
          logger.warn("Login attempt with empty username or password")
          return [status: "error", message: "Username and password are required"]
@@ -53,26 +55,6 @@ class AuthService {
          return [status: "error", message: "Invalid username or password"]
       }
 
-      // Initial session validation - yes this is shitty implemented
-      Session existingSession = Session.findByUser(user)
-
-//      if (existingSession) {
-//         long now = System.currentTimeMillis()
-//         long sessionAge = now - existingSession.creation_timestamp
-//
-//         if (sessionAge > MAX_SESSION_TIME) {
-//            logger.info("org.bdch.Session expired for user $username, deleting old session")
-//            existingSession.delete(flush: true)
-//         } else {
-//            logger.info("org.bdch.User $username already has a valid session")
-//            return [status       : "success", message: "Login successful",
-//                    user         : [user_id   : user.id,
-//                                    username  : user.username,
-//                                    sessionKey: existingSession.sessionKey
-//                    ], sessionKey: existingSession.sessionKey]
-//         }
-//      }
-
       Session session = new Session(
          sessionKey: UUID.randomUUID().toString(),
          user: user,
@@ -84,16 +66,24 @@ class AuthService {
          logger.error("org.bdch.Session couln'd be saved due to: ${session.errors}")
       }
 
+      Cookie sessionCookie  = new Cookie('sessionKey', session.sessionKey)
+      sessionCookie.httpOnly = true  // Prevent XSS attacks
+      sessionCookie.secure = false   // Set to true in production with HTTPS
+      sessionCookie.maxAge = 86400   // 24 hours
+      sessionCookie.path = '/'
+      response.addCookie(sessionCookie)
+
       logger.info("org.bdch.User '${user.username}' logged in successfully")
       return [status : "success",
+              sessionKey: session.sessionKey,
               message: "Login successful",
               user   : [user_id   : user.id,
                         username  : user.username,
-                        sessionKey: session.sessionKey]
+              ]
       ]
    }
 
-   static def validateSession(String sessionKey) {
+   def validateSession(String sessionKey) {
       if (!sessionKey) {
          return [valid: false, message: "No session key provided"]
       }

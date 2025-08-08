@@ -13,7 +13,7 @@ class UrlMappings {
 
       // User Profile
       "/userProfilePage"(controller: "userProfile", action: "renderUserProfilePage")
-      "/userProfilePage/delete"(controller: "userProfile", action: "deleteUserProfile", method: "DELETE")
+      "/userProfilePage/delete"(controller: "userProfile", action: "deleteUserProfile", method: "POST")
 
       // Auth for Spotify
       "/auth/callback"(controller: "auth", action: "callbackHandling")
@@ -27,7 +27,7 @@ class UrlMappings {
       }
 
       // Error Pages
-      "500"(view: '/error')
+      "500"(view: '/login') // At error, redirect to login page
       "404"(view: '/notFound')
    }
 }

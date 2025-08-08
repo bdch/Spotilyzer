@@ -12,8 +12,13 @@ class UserProfileController extends AbstractController {
     def deleteUserProfile() {
         logger.info("Attempting to delete user profile")
        User currentUser = getCurrentUser()
+       if (!currentUser) {
+          render(status: 401, text: "NO USER IN CONTEXT")
+          return
+       }
        def result = userService.deleteUser(currentUser.username)
        render(status: result, text: "User profile deleted successfully"  as JSON)
+       redirect("/") // Redirect to home page after deletion
     }
 
 
