@@ -21,10 +21,9 @@ class LoginController extends AbstractController {
       def username = json?.username?.toString()
       def password = json?.password?.toString()
 
-      def result = authService.login(username, password)
+      def result = authService.login(username, password, response)
       render result as JSON
    }
-
 
    def renderLoginPage() {
       renderViewFromStatic("loginPage")

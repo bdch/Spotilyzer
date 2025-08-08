@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.status === 'success') {
                 localStorage.setItem('sessionKey', data.sessionKey);
-                window.location.href = "/home";
+                window.location.href = `/home?sessionKey=${encodeURIComponent(data.sessionKey)}`;
             } else {
                 alert("Login failed: " + data.message);
             }

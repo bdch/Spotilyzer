@@ -7,6 +7,8 @@
     --accent: #1db954;
     --input-bg: #1e1e1e;
     --border: #333;
+    --primary: #007bff;
+    --danger: #dc3545;
 }
 
 html, body {
@@ -73,11 +75,10 @@ input:focus {
     outline: none;
 }
 
-button {
+.btn {
     margin-top: 1.5rem;
     width: 100%;
     padding: 10px 20px;
-    background-color: var(--accent);
     border: none;
     color: white;
     font-weight: bold;
@@ -97,7 +98,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.success-btn:hover {
     background-color: #1ed760; /* heller Spotify-Grün */
 }
 
@@ -189,10 +190,25 @@ button:hover {
 
 /* Bootstrap */
 .btn-primary {
-    color: white;
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: var(--primary);
     width: auto;
+}
+
+.btn-primary:hover {
+    background-color: #3B89E3;
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    width: auto;
+}
+
+.btn-danger:hover {
+    background-color: #DE4E5B;
+}
+
+.btn-success {
+    background-color: var(--accent);
 }
 
 .form-mini {

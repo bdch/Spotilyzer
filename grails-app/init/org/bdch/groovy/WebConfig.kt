@@ -1,9 +1,24 @@
 package org.bdch.groovy
 
+import util.SessionInterceptor
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Configuration
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-class WebConfig {
+@Configuration
+class WebConfig(
+    @Autowired
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val sessionInterceptor: SessionInterceptor
+): WebMvcConfigurer {
 
-    init {
-    println(" Foo")
+    companion object {}
+
+    override fun addInterceptors(registry: org.springframework.web.servlet.config.annotation.InterceptorRegistry) {
+        registry.addInterceptor(sessionInterceptor)
+            .addPathPatterns("/**")
+            .excludePathPatterns("/", "/loginPage/**", "/auth/**", "/registerPage")
     }
+
+
 }

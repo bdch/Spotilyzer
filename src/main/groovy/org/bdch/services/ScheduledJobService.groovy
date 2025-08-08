@@ -19,9 +19,20 @@ class ScheduledJobService {
       List<Session> expiredSessions = Session.where {
          creation_timestamp < (now - timeOutMillis)
       }.list()
+
       expiredSessions.each { session ->
-         logger.info("Deleting expired session with ID: ${session.id} for user: ${session.owner.username}")
-         session.delete(flush: true)
+         def user = session.user
+         logger.info("Deleting expired session with ID: ${session.id} for user: ${session.user?.username}")
+
+         // Disconnect the reference from the `Session`to the `User`, or GORM
+         // will try to delete the user, but fail, because the user is currently referencing it
+         // causing an error
+//         if (user?.session == session) {
+//            user.session = null
+//            user.save(flush: true, failOnError: true)
+//         }
+
+         session.delete(flush: true, failOnError: true)
       }
    }
 
