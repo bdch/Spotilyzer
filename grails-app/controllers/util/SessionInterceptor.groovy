@@ -21,12 +21,21 @@ class SessionInterceptor implements HandlerInterceptor {
    @Autowired
    AuthService authService
 
+   // /auth/spotify is NOT here - it needs normal cookie validation
+   // /auth/callback is NOT here - it has special state parameter validation
+   //  The flow is:
+   // 1. User clicks "Login with Spotify" with the initial request to `/auth/spotify`
+   // -> Uses normal cookie-based session validation
+   // -> Sets currentUser attribute
+   // -> AuthController can access the user and put sessionKey in state parameter
+   // 2. Spotify redirects to `/auth/callback` with the state parameter
+   // -> Uses state parameter for session validation
+   // -> Sets currentUser attribute
+   // -> AuthController can access the user to save Spotify data
    private static List<String> excludedEndpoints = [
       '/loginPage',
       '/auth/register',
       '/registerPage',
-      '/auth/callback',
-      '/auth/spotify',
       '/error'
    ]
 
@@ -36,9 +45,11 @@ class SessionInterceptor implements HandlerInterceptor {
    @Override
    boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
       logger.info("Checking session for URI: ${request.requestURI}")
-
-      // Skip validation for login/register endpoints
       String uri = request.requestURI
+      if (uri == '/auth/callback') {
+         return handleSpotifyCallback(request, response)
+      }
+
       if (uri in excludedEndpoints || uri == '/') {
          return true
       }
@@ -68,6 +79,27 @@ class SessionInterceptor implements HandlerInterceptor {
          return sendUnauthorized(response, validation.message)
       } else {
          logger.info("Session validated successfully for user: ${validation.user.username}")
+         request.setAttribute('currentUser', validation.user)
+         return true
+      }
+   }
+
+   // The session interceptor  runs and validates, but if `/auth/spotify` was excluded,
+   // the interceptor will not set the `currentUser` attribute.
+   // So we need to handle the Spotify callback separately.
+   private boolean handleSpotifyCallback(HttpServletRequest request, HttpServletResponse response) {
+      String sessionKey = request.getParameter('state')
+      if (!sessionKey) {
+         logger.warn("No state parameter in Spotify callback")
+         return sendUnauthorized(response, 'Invalid callback - no state')
+      }
+
+      def validation = authService.validateSession(sessionKey)
+      if (!validation.valid) {
+         logger.warn("Invalid session in Spotify callback: ${validation.message}")
+         return sendUnauthorized(response, validation.message)
+      } else {
+         logger.info("Session validated successfully for Spotify callback, user: ${validation.user.username}")
          request.setAttribute('currentUser', validation.user)
          return true
       }
