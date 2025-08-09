@@ -1,7 +1,5 @@
 package org.bdch
 
-import grails.gorm.annotation.Entity
-
 class Session {
 
    Long id
