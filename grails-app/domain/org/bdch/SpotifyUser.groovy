@@ -18,19 +18,18 @@ class SpotifyUser {
       id column: 'id'
       spotifyId column: 'spotify_id', unique: true
       displayName column: 'display_name'
-      accessToken column: 'access_token'
-      refreshToken column: 'refresh_token'
+      accessToken column: 'access_token', type: 'text'
+      refreshToken column: 'refresh_token', type: 'text'
       tokenExpiration column: 'token_expiration'
       userId column: 'user_id'
    }
 
-    static constraints = {
-      id nullable: false, blank: false, unique: true
+   static constraints = {
       spotifyId nullable: false, blank: false, unique: true
       displayName nullable: true, blank: true
       accessToken nullable: false, blank: false
       refreshToken nullable: false, blank: false
-      tokenExpiration nullable: false, blank: false
-      userId nullable: false, blank: false
-    }
+      tokenExpiration nullable: false
+      user nullable: false
+   }
 }
