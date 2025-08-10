@@ -2,6 +2,11 @@ package org.bdch
 
 import java.sql.Timestamp
 
+/**
+ * This class can be seen as an anchor, to link a Spotify user to the application user.
+ * The main purpose should then not be to store the Spotify user data,
+ * but to store the access and refresh tokens, as well as the token expiration.
+*/
 class SpotifyUser {
 
    Long id
