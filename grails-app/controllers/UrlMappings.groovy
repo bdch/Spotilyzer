@@ -8,8 +8,17 @@ class UrlMappings {
       "/auth/register"(controller: "auth", action: "register")
       "/loginPage"(controller: "login", action: "login", method: "POST")
 
-      // Home Page
+      // Main Dashboard Page: This is only is the rendering
       "/home"(controller: "homeDelegate", action: "renderHomePage")
+
+      // Dashboard Data API as ONE JSON endpoint
+      "/api/dashboard/data"(controller: "dashboard", action: "getDashboardData")
+
+      // Spotify Data fetching: Our strategy is to have endpoints for different data fetching
+      // This way we can easily extend it in the future and group it into the endpoint above.
+      // This way, we are chasing the BFF (Backend for Frontend) pattern.
+      "/api/spotify/currentUserProfile"(controller: "spotify", action: "getFreshUserProfile")
+
 
       // User Profile
       "/userProfilePage"(controller: "userProfile", action: "renderUserProfilePage")

@@ -1,6 +1,6 @@
 package org.bdch.services
 
-
+import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import org.apache.commons.collections.keyvalue.TiedMapEntry
 import org.bdch.SpotifyUser
@@ -8,6 +8,8 @@ import org.bdch.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import javax.servlet.http.HttpServletRequest
+import java.net.http.HttpRequest
 import java.sql.Timestamp
 
 @Transactional
@@ -15,8 +17,7 @@ class SpotifyService {
 
    Logger logger = LoggerFactory.getLogger(SpotifyService.class)
 
-
-   def saveSpotifyUser(User user, Map spotifyData) {
+   static def saveSpotifyUser(User user, Map spotifyData) {
 
       SpotifyUser existingSpotifyUser = SpotifyUser.findByUser(user)
 
@@ -47,7 +48,6 @@ class SpotifyService {
          }
          newSpotifyUser.save(flush: true, failOnError: true)
       }
-
    }
 
    def getValidAccessToken(User user) {
@@ -66,6 +66,10 @@ class SpotifyService {
          return refreshAccessToken(spotifyUser)
       }
       return spotifyUser.accessToken
+   }
+
+   static boolean isTokenExpired(SpotifyUser spotifyUser) {
+      return System.currentTimeMillis() >= spotifyUser.tokenExpiration.time
    }
 
    def refreshAccessToken(SpotifyUser spotifyUser) {
@@ -100,6 +104,53 @@ class SpotifyService {
       } catch (Exception e) {
          logger.error("Failed to refresh Spotify access token", e)
          throw new RuntimeException("Failed to refresh Spotify access token")
+      }
+   }
+
+   def getUserProfile(User currentUser) {
+      SpotifyUser currentSpotifyUser = SpotifyUser.findByUser(currentUser)
+
+      if (!currentSpotifyUser) {
+         logger.error("No authenticated Spotify User found")
+      }
+
+      if (isTokenExpired(currentSpotifyUser)) {
+         logger.info("Spotify access token is not valid for user: ${currentUser.username}")
+         logger.info("Attempting to refresh access token...")
+         refreshAccessToken(currentSpotifyUser)
+         logger.info("Refresh access token success!")
+
+         // and send
+      } else {
+         logger.info("Spotify access token is still valid for user: ${currentUser.username}")
+         def accessToken = currentSpotifyUser.accessToken
+         def conn = new URL("https://api.spotify.com/v1/me").openConnection()
+         conn.setRequestProperty("Authorization", "Bearer ${accessToken}")
+
+         def response = conn.inputStream.text
+         def responseJson = JSON.parse(response)
+
+         currentSpotifyUser.displayName = responseJson.display_name
+
+         if (responseJson.images && responseJson.images.size() > 0) {
+            currentSpotifyUser.profileImageUrl = responseJson.images[0].url ?: currentSpotifyUser.profileImageUrl
+            if (responseJson.images.size() > 1) {
+               currentSpotifyUser.profileImageUrlSmall = responseJson.images[1].url ?: currentSpotifyUser.profileImageUrlSmall
+            }
+         }
+
+         if (!currentSpotifyUser.save(flush: true)) {
+            logger.error("Failed to update SpotifyUser: ${currentSpotifyUser.errors}")
+         }
+
+         return [
+            id          : responseJson.id,
+            displayName : responseJson.display_name,
+            images      : responseJson.images ?: [],
+            product     : responseJson.product ?: "unknown",
+            uri         : responseJson.uri ?: "",
+            externalUrls: responseJson.external_urls ?: [:],
+         ]
       }
    }
 }

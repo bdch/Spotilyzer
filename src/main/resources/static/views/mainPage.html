@@ -1,6 +1,5 @@
+<!DOCTYPE html>
 <link rel="stylesheet" href="/css/spotilyzer.css">
-
-
 <div class="page-wrapper">
     <title>
         Homepage - Spotilyzer
@@ -20,8 +19,11 @@
             <script>
                 fetch('/components/dashboard.html')
                     .then(response => response.text())
-                    .then(html => {
+                    .then(async html => {
                         document.getElementById('main-content').innerHTML = html;
+
+                        const module = await import('/js/dashboardUI.js');
+                        module.init()
                     })
                     .catch(error => console.error('Error loading main-content:', error));
             </script>
@@ -31,3 +33,4 @@
 
 <script src="/js/register.js"></script>
 <script src="/js/openSideMenuBar.js"></script>
+<script type="module" src="/js/dashboardUI.js"></script>

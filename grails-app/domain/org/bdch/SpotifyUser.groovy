@@ -41,5 +41,7 @@ class SpotifyUser {
       refreshToken nullable: false, blank: false
       tokenExpiration nullable: false
       user nullable: false
+      profileImageUrl nullable: true
+      profileImageUrlSmall nullable: true
    }
 }
