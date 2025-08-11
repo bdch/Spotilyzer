@@ -119,38 +119,42 @@ class SpotifyService {
          logger.info("Attempting to refresh access token...")
          refreshAccessToken(currentSpotifyUser)
          logger.info("Refresh access token success!")
-
+         return fetchSpotifyProfile(currentSpotifyUser)
          // and send
       } else {
          logger.info("Spotify access token is still valid for user: ${currentUser.username}")
-         def accessToken = currentSpotifyUser.accessToken
-         def conn = new URL("https://api.spotify.com/v1/me").openConnection()
-         conn.setRequestProperty("Authorization", "Bearer ${accessToken}")
-
-         def response = conn.inputStream.text
-         def responseJson = JSON.parse(response)
-
-         currentSpotifyUser.displayName = responseJson.display_name
-
-         if (responseJson.images && responseJson.images.size() > 0) {
-            currentSpotifyUser.profileImageUrl = responseJson.images[0].url ?: currentSpotifyUser.profileImageUrl
-            if (responseJson.images.size() > 1) {
-               currentSpotifyUser.profileImageUrlSmall = responseJson.images[1].url ?: currentSpotifyUser.profileImageUrlSmall
-            }
-         }
-
-         if (!currentSpotifyUser.save(flush: true)) {
-            logger.error("Failed to update SpotifyUser: ${currentSpotifyUser.errors}")
-         }
-
-         return [
-            id          : responseJson.id,
-            displayName : responseJson.display_name,
-            images      : responseJson.images ?: [],
-            product     : responseJson.product ?: "unknown",
-            uri         : responseJson.uri ?: "",
-            externalUrls: responseJson.external_urls ?: [:],
-         ]
+         return fetchSpotifyProfile(currentSpotifyUser)
       }
+   }
+
+   private def fetchSpotifyProfile(SpotifyUser currentSpotifyUser) {
+      def accessToken = currentSpotifyUser.accessToken
+      def conn = new URL("https://api.spotify.com/v1/me").openConnection()
+      conn.setRequestProperty("Authorization", "Bearer ${accessToken}")
+
+      def response = conn.inputStream.text
+      def responseJson = JSON.parse(response)
+
+      currentSpotifyUser.displayName = responseJson.display_name
+
+      if (responseJson.images && responseJson.images.size() > 0) {
+         currentSpotifyUser.profileImageUrl = responseJson.images[0].url ?: currentSpotifyUser.profileImageUrl
+         if (responseJson.images.size() > 1) {
+            currentSpotifyUser.profileImageUrlSmall = responseJson.images[1].url ?: currentSpotifyUser.profileImageUrlSmall
+         }
+      }
+
+      if (!currentSpotifyUser.save(flush: true)) {
+         logger.error("Failed to update SpotifyUser: ${currentSpotifyUser.errors}")
+      }
+
+      return [
+         id          : responseJson.id,
+         displayName : responseJson.display_name,
+         images      : responseJson.images ?: [],
+         product     : responseJson.product ?: "unknown",
+         uri         : responseJson.uri ?: "",
+         externalUrls: responseJson.external_urls ?: [:],
+      ]
    }
 }
