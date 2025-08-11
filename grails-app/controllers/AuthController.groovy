@@ -154,7 +154,7 @@ class AuthController extends AbstractController {
       return JSON.parse(result)
    }
 
-   private User getCurrentAuthenticatedUser(request) {
+   User getCurrentAuthenticatedUser(request) {
       User currentUser = request.getAttribute('currentUser') as User
 
       if (!currentUser) {
@@ -168,18 +168,6 @@ class AuthController extends AbstractController {
          }
       }
       return currentUser
-   }
-
-   private static getCookieValue(request, String cookieName) {
-      def cookies = request.getCookies()
-      if (cookies) {
-         for (cookie in cookies) {
-            if (cookie.name == cookieName) {
-               return cookie.value
-            }
-         }
-      }
-      return null
    }
 
    /**
@@ -226,6 +214,10 @@ class AuthController extends AbstractController {
       } else {
          render([error: "No Spotify account found"] as JSON)
       }
+   }
+
+   def getUserProfileFromWebApi() {
+
    }
 
    def renderRegisterPage() {

@@ -1,30 +1,36 @@
+<!DOCTYPE html>
 <link rel="stylesheet" href="/css/spotilyzer.css">
-
-
 <div class="page-wrapper">
     <title>
         Homepage - Spotilyzer
     </title>
     <div class="content">
-        <div class="side-bar" style="margin-top: 10px">
-            <div id="main-sidebarMenu" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="/userProfilePage">My Account</a>
-                <a href="#">Services</a>
-                <a href="#">FILLER</a>
-                <a href="#">Github</a>
-            </div>
-
-            <!-- Use any element to open the sidenav -->
-            <span class="btnSpan" onclick="openNav()">Menu</span>
-
-            <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
-            <div id="main">
-            </div>
+        <div class="side-bar" style="margin-top: 10px" id="sidebar-container">
+            <script>
+                fetch('/components/sidebar.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('sidebar-container').innerHTML = html;
+                    })
+                    .catch(error => console.error('Error loading sidebar:', error));
+            </script>
         </div>
+        <div class="main-content" id="main-content">
+            <script>
+                fetch('/components/dashboard.html')
+                    .then(response => response.text())
+                    .then(async html => {
+                        document.getElementById('main-content').innerHTML = html;
 
+                        const module = await import('/js/dashboardUI.js');
+                        module.init()
+                    })
+                    .catch(error => console.error('Error loading main-content:', error));
+            </script>
+        </div>
     </div>
 </div>
 
 <script src="/js/register.js"></script>
 <script src="/js/openSideMenuBar.js"></script>
+<script type="module" src="/js/dashboardUI.js"></script>

@@ -33,4 +33,16 @@ abstract class AbstractController implements Controller {
    protected String getCurrentSessionKey() {
       return request.getHeader('X-Session-Key') ?: request.getParameter('sessionKey')
    }
+
+   protected static getCookieValue(request, String cookieName) {
+      def cookies = request.getCookies()
+      if (cookies) {
+         for (cookie in cookies) {
+            if (cookie.name == cookieName) {
+               return cookie.value
+            }
+         }
+      }
+      return null
+   }
 }
