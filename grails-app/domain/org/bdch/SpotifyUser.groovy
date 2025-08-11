@@ -16,6 +16,9 @@ class SpotifyUser {
    String refreshToken
    Timestamp tokenExpiration
 
+   String profileImageUrl
+   String profileImageUrlSmall // for thumbnails
+
    static belongsTo = [user: User]
 
    static mapping = {
@@ -26,6 +29,8 @@ class SpotifyUser {
       accessToken column: 'access_token', type: 'text'
       refreshToken column: 'refresh_token', type: 'text'
       tokenExpiration column: 'token_expiration'
+      profileImageUrl column: 'profile_image_url', type: 'text'
+      profileImageUrlSmall column: 'profile_image_url_small', type: 'text'
       userId column: 'user_id'
    }
 
