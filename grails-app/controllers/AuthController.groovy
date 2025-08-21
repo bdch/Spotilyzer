@@ -49,7 +49,7 @@ class AuthController extends AbstractController {
          def clientId = '788cbe36aea2447da6c6ad64c7208ab2' // Holy shit, lets hardcode this, YES
          // this is such a good idea!
          def redirectUri = URLEncoder.encode('http://127.0.0.1:8080/auth/callback', 'UTF-8')
-         def scope = URLEncoder.encode('user-read-private user-read-email playlist-read-private', 'UTF-8')
+         def scope = URLEncoder.encode('user-read-private user-read-email playlist-read-private user-top-read', 'UTF-8')
          // Remove curly braces and properly encode the session key
 
          def state = URLEncoder.encode(sessionKey, 'UTF-8') // Send the session as a state,

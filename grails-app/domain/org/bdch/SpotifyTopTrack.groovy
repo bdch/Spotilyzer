@@ -19,7 +19,7 @@ class SpotifyTopTrack {
       table 'spotify_top_tracks'
       id column: 'id'
       userSpotifyId column: 'user_spotify_id'
-      trackId column: 'spotify_track_id'
+      trackId column: 'track_id'
       trackName column: 'track_name'
       popularity column: 'popularity'
       fetchedAt column: 'fetched_at'
