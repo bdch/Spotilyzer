@@ -4,6 +4,7 @@ import org.bdch.services.SpotifyService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+@Deprecated
 @Controller
 class DashboardController {
 
