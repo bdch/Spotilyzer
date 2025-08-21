@@ -2,7 +2,9 @@ package org.bdch.services
 
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import org.bdch.SpotifyArtist
 import org.bdch.SpotifyTopTrack
+import org.bdch.SpotifyTrack
 import org.bdch.SpotifyUser
 import org.bdch.User
 import org.slf4j.Logger
@@ -265,27 +267,79 @@ class SpotifyService {
          def url = "https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=${limit}"
          def conn = new URL(url).openConnection()
          conn.setRequestProperty("Authorization", "Bearer ${accessToken}")
-         println(conn.requestProperties)
 
          def response = conn.inputStream.text
-         println(response)
          def responseJson = JSON.parse(response)
 
-         def tracks = responseJson.items?.collect { track ->
-            [
-               id        : track.id,
-               name      : track.name,
-               popularity: track.popularity
-            ]
-         } ?: []
+         def topTracks = []
 
-         logger.info("Fetched ${tracks.size()} tracks fresh from Spotify for user=${spotifyUser.user.username}")
-         return tracks
+         responseJson.items?.each { trackData ->
+            try {
+               SpotifyTrack track = upsertSpotifyTrack(trackData, spotifyUser)
 
+               SpotifyTopTrack topTrack = new SpotifyTopTrack(
+                  userSpotifyId: spotifyUser.id,
+                  trackId: track.trackId,
+                  trackName: track.trackName,
+                  popularity: track.popularity,
+                  timeRange: timeRange,
+                  fetchedAt: new Timestamp(System.currentTimeMillis())
+               ).save(flush: true, failOnError: true)
+
+               topTracks << [
+                  id         : track.trackId,
+                  name       : track.trackName,
+                  popularity : track.popularity,
+                  artist     : track.spotifyArtist.artistName,
+                  imageUrl   : track.imageUrl,
+                  externalUrl: track.spotifyUrl
+               ]
+            } catch (Exception e) {
+               logger.error("Failed to upsert track: ${trackData.id} - ${trackData.name}", e)
+            }
+         }
+         return topTracks
       } catch (Exception e) {
          logger.error("Failed to fetch top tracks from Spotify", e)
-         return []
+         // Skip this track and continue
       }
+   }
+
+   private SpotifyTrack upsertSpotifyTrack(Map trackData, SpotifyUser spotifyUser) {
+      logger.info("Attempting to upsert Spotify track: ${trackData.id} - ${trackData.name}")
+
+      def artistData = trackData.artists?.getAt(0)
+      SpotifyArtist artist = null
+
+      if (artistData) {
+         artist = SpotifyArtist.findByArtistId(artistData.id)
+         if (!artist) {
+            artist = new SpotifyArtist(
+               userSpotifyId: spotifyUser.id,
+               artistId: artistData.id,
+               artistName: artistData.name,
+               fetchedAt: new Timestamp(System.currentTimeMillis())
+            ).save(flush: true, failOnError: true)
+         }
+      }
+
+      logger.info("Upserting track for artist: ${artist?.artistName ?: 'Unknown Artist'}")
+
+      SpotifyTrack track = SpotifyTrack.findByTrackId(trackData.id)
+      if (!track) {
+         track = new SpotifyTrack(
+            trackId: trackData.id,
+            trackName: trackData.name,
+            imageUrl: trackData.album?.images?.getAt(0)?.url,
+            spotifyUrl: trackData.external_urls?.spotify ?: "",
+            popularity: trackData.popularity ?: 0,
+            fetchedAt: new Timestamp(System.currentTimeMillis()),
+            spotifyArtist: artist,
+            spotifyUser: spotifyUser
+         ).save(flush: true, failOnError: true)
+      }
+      logger.info("Upserted track: ${track.trackName} (ID: ${track.trackId})")
+      return track
    }
 
 
