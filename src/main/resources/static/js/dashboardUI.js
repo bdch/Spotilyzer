@@ -79,30 +79,11 @@ function createTrackElement(track, position) {
     const duration = formatDuration(track.duration_ms);
 
     trackDiv.innerHTML = `
-        <div class="track-position">${position}</div>
-        <div class="track-info">
-            ${albumImage ? `<img class="track-album-image" src="${albumImage}" alt="${track.album.name}">` : ''}
-            <div class="track-details">
-                <div class="track-name">${track.name}</div>
+        ${albumImage ? `<img class="track-album-image" src="${albumImage}" alt="${track.album.name}">` : ''}
+            <div class="track-name">${track.name}</div>
                 <div class="track-artist">${artistNames}</div>
-                <div class="track-album">${track.album ? track.album.name : 'Unknown Album'}</div>
-            </div>
-        </div>
-        <div class="track-meta">
-            <div class="track-duration">${duration}</div>
-            <div class="track-popularity">
-                <span class="popularity-score">${track.popularity}%</span>
-                <div class="popularity-bar">
-                    <div class="popularity-fill" style="width: ${track.popularity}%"></div>
-                </div>
-            </div>
-        </div>
-        ${track.external_urls && track.external_urls.spotify ?
-        `<div class="track-actions">
-                <a href="${track.external_urls.spotify}" target="_blank" class="spotify-link">
-                    Open in Spotify
-                </a>
-            </div>` : ''
+                    ${track.external_urls && track.external_urls.spotify ?
+                        `<a href="${track.external_urls.spotify}" target="_blank" class="track-actions">Open in Spotify</a>` : ''
     }
     `;
 
