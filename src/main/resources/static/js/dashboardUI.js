@@ -64,24 +64,17 @@ function createTrackElement(track, position) {
     const trackDiv = document.createElement('div');
     trackDiv.className = 'track-item';
 
-    // Get album image
-    let albumImage = '';
-    if (track.album && track.album.images && track.album.images.length > 0) {
-        // Use the smallest available image (usually the last one)
-        albumImage = track.album.images[track.album.images.length - 1].url;
-    }
+    const imageUrl = track.imageUrl || '';
 
-    // Format artists
-    const artistNames = track.artists ?
-        track.artists.map(artist => artist.name).join(', ') : 'Unknown Artist';
+    const artistName = track.artist || 'Unknown Artist';
 
     // Format duration
     const duration = formatDuration(track.duration_ms);
 
     trackDiv.innerHTML = `
-        ${albumImage ? `<img class="track-album-image" src="${albumImage}" alt="${track.album.name}">` : ''}
+        ${imageUrl ? `<img class="track-album-image" src="${imageUrl}" alt="${track.name}">` : ''}
             <div class="track-name">${track.name}</div>
-                <div class="track-artist">${artistNames}</div>
+                <div class="track-artist">${artistName}</div>
                     ${track.external_urls && track.external_urls.spotify ?
                         `<a href="${track.external_urls.spotify}" target="_blank" class="track-actions">Open in Spotify</a>` : ''
     }

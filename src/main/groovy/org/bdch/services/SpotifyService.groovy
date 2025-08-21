@@ -231,7 +231,9 @@ class SpotifyService {
          [
             id        : track.trackId,
             name      : track.trackName,
-            popularity: track.popularity
+            popularity: track.popularity,
+            artist    : track.spotifyTrack.spotifyArtist.artistName,
+            imageUrl  : track.spotifyTrack.imageUrl,
          ]
       }
    }
@@ -243,12 +245,22 @@ class SpotifyService {
       )
 
       def now = new Timestamp(System.currentTimeMillis())
-      tracks.each { track ->
+      tracks.each { t ->
+
+         def spotifyTrack = SpotifyTrack.findByTrackId(t.id) ?: new SpotifyTrack(
+            trackId: t.id,
+            trackName: t.name,
+            spotifyArtist: t.artists?.join(', '),
+            spotifyUrl: t.external_urls?.spotify,
+            fetchedAt: now
+         ).save(flush: true, failOnError: true)
+
          new SpotifyTopTrack(
             userSpotifyId: userSpotifyId,
-            trackId: track.id,
-            trackName: track.name,
-            popularity: track.popularity,
+            spotifyTrack: spotifyTrack,
+            trackId: spotifyTrack.trackId,
+            trackName: spotifyTrack.trackName,
+            popularity: spotifyTrack.popularity,
             timeRange: timeRange,
             fetchedAt: now
          ).save(flush: false, failOnError: true)
@@ -279,6 +291,7 @@ class SpotifyService {
 
                SpotifyTopTrack topTrack = new SpotifyTopTrack(
                   userSpotifyId: spotifyUser.id,
+                  spotifyTrack: track,
                   trackId: track.trackId,
                   trackName: track.trackName,
                   popularity: track.popularity,
