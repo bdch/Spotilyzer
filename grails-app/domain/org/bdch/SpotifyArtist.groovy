@@ -7,7 +7,7 @@ import org.hibernate.annotations.TypeDef
 import java.sql.Timestamp
 
 @TypeDef(name = "string-array", typeClass = StringArrayType.class)
-class SpotifyTopArtist {
+class SpotifyArtist {
 
    Long id
    Long userSpotifyId
@@ -21,10 +21,10 @@ class SpotifyTopArtist {
    Integer position
    Timestamp fetchedAt
 
-   static belongsTo = [spotifyUser: SpotifyUser]
+   static hasMany = [spotifyTracks: SpotifyTrack]
 
    static mapping = {
-      table 'spotify_top_artists'
+      table 'spotify_artists'
       id column: 'id'
       userSpotifyId column: 'user_spotify_id'
       artistId column: 'artist_id'
@@ -37,5 +37,10 @@ class SpotifyTopArtist {
 
    static constraints = {
       artistId nullable: false, blank: false
+      artistName nullable: false, blank: false
+      userSpotifyId nullable: false
+      fetchedAt nullable: true
+      position nullable: true
+      genres nullable: true
    }
 }

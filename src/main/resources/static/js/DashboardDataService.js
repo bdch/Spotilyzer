@@ -8,11 +8,13 @@ class DashboardDataService {
     async fetchAll() {
         try {
             // Parallel API calls to fetch data
-            const [profile, playlists, recent] = await Promise.all([
+            const [profile, topTracks,] = await Promise.all([
                 fetch('/api/spotify/currentUserProfile').then(r => r.json()),
+                fetch('/api/spotify/currentUserTopTracks').then(r => r.json())
             ])
             this.data = {
                 profile: profile,
+                topTracks: topTracks,
             }
             this.notifySubscribers();
         } catch (e) {

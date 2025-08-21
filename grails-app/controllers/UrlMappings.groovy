@@ -18,6 +18,7 @@ class UrlMappings {
       // This way we can easily extend it in the future and group it into the endpoint above.
       // This way, we are chasing the BFF (Backend for Frontend) pattern.
       "/api/spotify/currentUserProfile"(controller: "spotify", action: "getFreshUserProfile")
+      "/api/spotify/currentUserTopTracks"(controller: "spotify", action: "getTopTracks")
 
 
       // User Profile

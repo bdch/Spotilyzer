@@ -31,4 +31,15 @@ class SpotifyController extends AbstractController {
       }
    }
 
+   def getTopTracks() {
+      try {
+         User currentUser = request.getAttribute('currentUser') as User
+         def data = spotifyService.getTopTracks(currentUser)
+         render data as JSON
+      }
+      catch (Exception e) {
+         logger.error("Error getting top tracks: ${e.message}", e)
+      }
+   }
+
 }

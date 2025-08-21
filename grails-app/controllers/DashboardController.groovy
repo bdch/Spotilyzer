@@ -4,6 +4,7 @@ import org.bdch.services.SpotifyService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+@Deprecated
 @Controller
 class DashboardController {
 
@@ -15,9 +16,11 @@ class DashboardController {
    def getDashboardData() {
       try {
          def profile = spotifyService.getUserProfile(request)
+         def topTracks = spotifyService.getTopTracks(request)
 
          render([
-            profile: profile
+            profile: profile,
+            topTracks: topTracks
          ] as JSON)
          logger.info("Collecting dashboard data for current user")
       } catch (Exception e) {

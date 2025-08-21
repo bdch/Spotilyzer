@@ -20,6 +20,7 @@ class SpotifyUser {
    String profileImageUrlSmall // for thumbnails
 
    static belongsTo = [user: User]
+   static hasMany = [topTracks: SpotifyTopTrack, tracks: SpotifyTrack]
 
    static mapping = {
       table 'user_spotify'
