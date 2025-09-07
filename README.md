@@ -10,10 +10,16 @@ interests, this can be refactored into react or vue.js.
 ### Running the application
 
 To run the application, make sure you are on the right profile and port:
-- For port tunneling, run and put in the password. If you need help, contact me.
+- For port tunneling, run and put in the password.
 ```shell
   ssh -N -L 15432:localhost:5432 bdch@bdch -p 11111
 ```
+
+### Make sure that the PostgreSQL database is running and tunnel the right port!
+
+[Here are the ports, that are defined](VM_PORTS.jpg).
+
+- Also, I included a database dump in root: `backup.dump` if you want to restore the database.
 
 - If you are on a Windows development machine, run
 ```
@@ -21,6 +27,7 @@ To run the application, make sure you are on the right profile and port:
 ```
 This sets the profile to development and will allow you to run the app
 with the correct port.
+
 
 
 
